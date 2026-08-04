@@ -2,9 +2,10 @@
   "name": "backend",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+ "dev": "nodemon --watch src --ext ts --exec \"node --loader ts-node/esm\" src/server.ts",
+  "start": "tsx src/server.ts"
   },
   "keywords": [],
   "author": "",
@@ -23,10 +24,17 @@
     "pg": "^8.22.0"
   },
   "devDependencies": {
+    "@types/bcrypt": "^6.0.0",
+    "@types/cors": "^2.8.19",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.10",
+    "@types/multer": "^2.2.0",
     "@types/node": "^26.1.2",
     "@types/pg": "^8.20.3",
+    "nodemon": "^3.1.14",
     "prisma": "^7.9.1",
-    "tsx": "^4.23.2",
-    "typescript": "^7.0.2"
+    "ts-node": "^10.9.2",
+    "tsx": "^4.23.4",
+    "typescript": "^5.8.3"
   }
 }
