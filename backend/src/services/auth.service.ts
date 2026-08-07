@@ -1,6 +1,7 @@
 import prisma from "../lib/prisma";
 import bcrypt from "bcrypt";
 import { generteToken } from "../utils/jwt";
+
 import { Role } from "@prisma/client";
 
 //Register user
