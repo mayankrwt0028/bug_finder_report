@@ -1,5 +1,6 @@
 import { Grid } from "@mui/material";
 import StatCard from "./StatCard";
+import { BugReportOutlined } from "@mui/icons-material";
 
 interface DashboardData {
   totalUsers: number;
@@ -45,7 +46,7 @@ const DashboardCards = ({ data }: Props) => {
           key={card.title}
           size={{ xs: 12, sm: 6, md: 4, lg: 3 }}
         >
-          <StatCard title={card.title} value={card.value} />
+          <StatCard title={card.title} value={card.value}  icon={<BugReportOutlined />}  />
         </Grid>
       ))}
     </Grid>

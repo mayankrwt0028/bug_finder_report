@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { uploadAttachment } from "../../services/attachment.service";
-import { getComment, createComment } from "../../services/comment.service";
+// import { getComment, createComment } from "../../services/comment.service";
 
 import {
   Paper,
@@ -39,8 +39,8 @@ const BugDetails = () => {
 
   const [developerId, setDeveloperId] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  const [comments, setComments] = useState<any[]>([]);
-  const [showcomment, setShowComment] = useState("");
+  // const [comments, setComments] = useState<any[]>([]);
+  // const [showcomment, setShowComment] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
