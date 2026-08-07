@@ -1,43 +1,38 @@
-import { Request , Response } from "express";
+import { Request, Response } from "express";
 import { registerService } from "../services/auth.service";
 import { error } from "node:console";
 import { loginService } from "../services/auth.service";
 
-
 //creating new user
-export const register = async(req: Request,res: Response)=>{
+export const register = async (req: Request, res: Response) => {
+  try {
+    const result = await registerService(req.body);
 
-try {
-  const result = await registerService(req.body)
+    return res.status(201).json(result);
+  } catch (error) {
+    console.error(error);
 
-  return res.status(201).json(result)
-
-} catch (error) {
-  console.error(error);
-
-  return res.status(500).json({
-    success: false,
-    message: error instanceof Error ? error.message : "Internal Server Error",
-  });
-}
-}
+    return res.status(500).json({
+      success: false,
+      message: error instanceof Error ? error.message : "Internal Server Error",
+    });
+  }
+};
 
 //Login user
 
-export const login = async(req: Request, res: Response) =>{
-  try{
-const result = await loginService(req.body)
-return res.status(200).json(result);
-
-  }catch(error){
-console.log(error)
-return res.status(400).json({
-  success : false,
-  message : error instanceof Error ? error.message : "Login Failed"
-})
+export const login = async (req: Request, res: Response) => {
+  try {
+    const result = await loginService(req.body);
+    return res.status(200).json(result);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json({
+      success: false,
+      message: error instanceof Error ? error.message : "Login Failed",
+    });
   }
-}
-
+};
 
 // export const updateProject = async (
 //   id: string,

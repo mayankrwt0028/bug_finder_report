@@ -1,26 +1,25 @@
-
 import prisma from "../lib/prisma";
 
-export const createProject = async(data: {
-  name: string,
-  description?: string,
-  createdById:string
-}) =>{
-  const {name, description, createdById} = data
+export const createProject = async (data: {
+  name: string;
+  description?: string;
+  createdById: string;
+}) => {
+  const { name, description, createdById } = data;
 
-  if(!name || !createdById){
-    throw new Error("All field are required")
+  if (!name || !createdById) {
+    throw new Error("All field are required");
   }
-const existingProject = await prisma.project.findUnique({
-  where: {
-    name,
-  },
-});
+  const existingProject = await prisma.project.findUnique({
+    where: {
+      name,
+    },
+  });
 
-if (existingProject) {
-  throw new Error("Project already exists");
-}
-const user = await prisma.user.findUnique({
+  if (existingProject) {
+    throw new Error("Project already exists");
+  }
+  const user = await prisma.user.findUnique({
     where: {
       id: createdById,
     },
@@ -38,39 +37,38 @@ const user = await prisma.user.findUnique({
   });
 
   return project;
-  
-}
+};
 
-export const getAllProjects = async()=>{
+export const getAllProjects = async () => {
   const projects = await prisma.project.findMany({
-    orderBy:{
-      createdAt: "desc"
-    }
-  })
-  return projects
-}
+    orderBy: {
+      createdAt: "desc",
+    },
+  });
+  return projects;
+};
 
-export const getProjectById = async (id:string)=>{
-  if(!id){
-    throw new Error("Project id is required")
+export const getProjectById = async (id: string) => {
+  if (!id) {
+    throw new Error("Project id is required");
   }
   const project = await prisma.project.findUnique({
-    where:{
+    where: {
       id,
     },
-  })
-  if(!project){
-    throw new Error("project not found")
+  });
+  if (!project) {
+    throw new Error("project not found");
   }
-  return project
-}
+  return project;
+};
 
 export const updateProject = async (
   id: string,
   data: {
     name?: string;
     description?: string;
-  }
+  },
 ) => {
   const { name, description } = data;
 

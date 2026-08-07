@@ -1,10 +1,16 @@
 import { Response } from "express";
 import { AuthRequest } from "../middleware/auth.middleware";
-import { createProject, getAllProjects, getProjectById, updateProject } from "../services/project.service";
+import {
+  createProject,
+  deleteProject,
+  getAllProjects,
+  getProjectById,
+  updateProject,
+} from "../services/project.service";
 
 export const createProjectController = async (
   req: AuthRequest,
-  res: Response
+  res: Response,
 ) => {
   try {
     const { name, description } = req.body;
@@ -28,65 +34,73 @@ export const createProjectController = async (
   }
 };
 
-export const getAllProjectsCont = async (req: AuthRequest,
-  res:Response
-)=>{
+export const getAllProjectsCont = async (req: AuthRequest, res: Response) => {
   try {
     const projects = await getAllProjects();
     return res.status(200).json({
-      success:true,
+      success: true,
       projects,
-    })
-  } catch (error:any) {
+    });
+  } catch (error: any) {
     return res.status(500).json({
-      success:false,
-      message: error.message
-    })
+      success: false,
+      message: error.message,
+    });
   }
-}
+};
 
-export const getProjectByIdCont = async (
-  req:AuthRequest,
-  res:Response
-)=>{
+export const getProjectByIdCont = async (req: AuthRequest, res: Response) => {
   try {
-
     const id = req.params.id as string;
     const project = await getProjectById(id);
     return res.status(200).json({
-      sucess:true,
+      sucess: true,
       project,
-    })
-  } catch (error:any) {
+    });
+  } catch (error: any) {
     return res.status(500).json({
-      success:false,
-      message: error.message
-    })
+      success: false,
+      message: error.message,
+    });
   }
-}
+};
 //Update Project
-export const updateProjectCont = async(
-  req:AuthRequest,
-  res:Response
-)=>{
+export const updateProjectCont = async (req: AuthRequest, res: Response) => {
   try {
-    const id = req.params.id as string
+    const id = req.params.id as string;
 
-    const{name, description} = req.body;
+    const { name, description } = req.body;
     const project = await updateProject(id, {
       name,
-      description
-    })
+      description,
+    });
     return res.status(200).json({
-      success:true,
+      success: true,
       message: "project update successfully",
       project,
-    })
-
+    });
   } catch (error: any) {
     return res.status(400).json({
-      success:false,
-      message: error.message
-    })
+      success: false,
+      message: error.message,
+    });
   }
-}
+};
+
+export const deleteProjectCont = async (req: AuthRequest, res: Response) => {
+  try {
+    const id = req.params.id as string;
+
+    const result = await deleteProject(id);
+
+    return res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  } catch (error: any) {
+    return res.status(400).json({
+      success: false,
+      message: error.message,
+    });
+  }
+};

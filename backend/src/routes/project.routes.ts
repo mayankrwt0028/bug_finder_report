@@ -5,19 +5,38 @@ import { Role } from "@prisma/client";
 import { createProject, getProjectById } from "../services/project.service";
 import { CreateNewBug } from "../services/bug.service";
 import { createBug } from "../controllers/bug.controller";
-import { createProjectController, getAllProjectsCont, getProjectByIdCont, updateProjectCont } from "../controllers/project.controller";
+import {
+  createProjectController,
+  deleteProjectCont,
+  getAllProjectsCont,
+  getProjectByIdCont,
+  updateProjectCont,
+} from "../controllers/project.controller";
 
 const router = Router();
 
-router.post("/", authMiddleware, roleMiddleware(Role.ADMIN, Role.MANAGER, Role.QA), createProjectController)
+router.post(
+  "/",
+  authMiddleware,
+  roleMiddleware(Role.ADMIN, Role.MANAGER, Role.QA),
+  createProjectController,
+);
 
+router.get("/", authMiddleware, getAllProjectsCont);
 
+router.get("/:id", authMiddleware, getProjectByIdCont);
 
-router.get("/",authMiddleware, getAllProjectsCont)
-
-router.get("/:id", authMiddleware,getProjectByIdCont)
-
-router.put("/:id", authMiddleware, roleMiddleware(Role.ADMIN, Role.MANAGER),updateProjectCont)
+router.put(
+  "/:id",
+  authMiddleware,
+  roleMiddleware(Role.ADMIN, Role.MANAGER),
+  updateProjectCont,
+);
+router.delete(
+  "/:id",
+  authMiddleware,
+  roleMiddleware(Role.ADMIN, Role.MANAGER),
+  deleteProjectCont,
+);
 
 export default router;
-
