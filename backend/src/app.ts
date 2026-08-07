@@ -9,11 +9,15 @@ import activityRouter from "./routes/activity.route";
 import reportRouter from "./routes/report.routes"
 import userRouter from './routes/users.route'
 import attachmentRoutes from './routes/attachment.route'
+import dotenv from 'dotenv'
 
 const app = express();
 
+dotenv.config()
+
 app.use(cors({
-  origin: ["http://localhost:5173/","https://bug-finder-report-1.onrender.com"],
+  origin: ["http://localhost:5173/",
+    process.env.FRONTEND_URL!],
   credentials:true,
   
 }))
