@@ -8,7 +8,7 @@ export const loginUser = async (data: {
 
   return response.data;
 };
-
+// https://bug-finder-report.onrender.com/api/auth/register
 export const registerUser = async (data: {
   name: string;
   email: string;
