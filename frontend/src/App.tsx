@@ -18,6 +18,7 @@ import UserList from "./pages/users/UserList";
 import CreateProject from "./pages/projects/CreateProject";
 import CreateBug from "./pages/bugs/CreateBug";
 import EditProject from "./pages/projects/EditProject";
+import Reports from "./pages/reports/Reports";
 
 function App() {
   return (
@@ -35,6 +36,7 @@ function App() {
           <Route path="/admin/bugs" element={<BugList />} />
 
           <Route path="/admin/users" element={<UserList />} />
+          <Route path="/admin/reports" element={<Reports />} />
           <Route path="/admin/projects/create" element={<CreateProject />} />
           <Route path="/admin/bugs/:id" element={<BugDetails />} />
           <Route path="/admin/projects/:id" element={<EditProject />} />
@@ -50,8 +52,9 @@ function App() {
           <Route path="/manager/bugs" element={<BugList />} />
 
           <Route path="/manager/users" element={<UserList />} />
+          <Route path="/manager/reports" element={<Reports />} />
           <Route path="/manager/projects/create" element={<CreateProject />} />
-          <Route path="/admin/bugs/:id" element={<BugDetails />} />
+          <Route path="/manager/bugs/:id" element={<BugDetails />} />
         </Route>
       </Route>
 
@@ -62,6 +65,7 @@ function App() {
           <Route path="/developer/projects" element={<ProjectList />} />
 
           <Route path="/developer/bugs" element={<BugList />} />
+          <Route path="/developer/reports" element={<Reports />} />
           <Route path="/developer/bugs/:id" element={<BugDetails />} />
         </Route>
       </Route>
@@ -73,7 +77,7 @@ function App() {
           <Route path="/qa/projects" element={<ProjectList />} />
 
           <Route path="/qa/bugs" element={<BugList />} />
-
+<Route path="/developer/reports" element={<Reports />} />
           <Route path="/qa/bugs/:id" element={<BugDetails />} />
 
           <Route path="/qa/bugs/create" element={<CreateBug />} />

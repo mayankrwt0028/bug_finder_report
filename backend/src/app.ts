@@ -15,12 +15,17 @@ const app = express();
 
 dotenv.config()
 
-app.use(cors({
-  origin: ["http://localhost:5173/",
-    process.env.FRONTEND_URL!],
-  credentials:true,
-  
-}))
+app.use(
+  cors({
+    origin: [
+      "http://localhost:5173",
+      process.env.FRONTEND_URL || "",
+    ],
+    credentials: true,
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+  })
+);
 app.use(express.json())
 
 
