@@ -32,7 +32,7 @@ function App() {
           <Route path="/admin/dashboard" element={<AdminDashboard />} />
 
           <Route path="/admin/projects" element={<ProjectList />} />
-
+          <Route path="/admin/bugs/create" element={<CreateBug />} />
           <Route path="/admin/bugs" element={<BugList />} />
 
           <Route path="/admin/users" element={<UserList />} />
@@ -50,7 +50,7 @@ function App() {
           <Route path="/manager/projects" element={<ProjectList />} />
 
           <Route path="/manager/bugs" element={<BugList />} />
-
+          <Route path="/manager/bugs/create" element={<CreateBug />} />
           <Route path="/manager/users" element={<UserList />} />
           <Route path="/manager/reports" element={<Reports />} />
           <Route path="/manager/projects/create" element={<CreateProject />} />
@@ -75,9 +75,9 @@ function App() {
           <Route path="/qa/dashboard" element={<QADashboard />} />
 
           <Route path="/qa/projects" element={<ProjectList />} />
-
+<Route path="/qa/bugs/create" element={<CreateBug />} />
           <Route path="/qa/bugs" element={<BugList />} />
-<Route path="/developer/reports" element={<Reports />} />
+          <Route path="/developer/reports" element={<Reports />} />
           <Route path="/qa/bugs/:id" element={<BugDetails />} />
 
           <Route path="/qa/bugs/create" element={<CreateBug />} />

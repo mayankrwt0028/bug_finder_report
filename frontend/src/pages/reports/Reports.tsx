@@ -24,21 +24,27 @@ const Reports = () => {
     loadReports();
   }, []);
 
-  const loadReports = async () => {
-    try {
-      const res = await getReports();
-      setReport(res.data.data);
-    } catch (err) {
-      console.log(err);
-    } finally {
-      setLoading(false);
-    }
-  };
+ const loadReports = async () => {
+  try {
+    const res = await getReports();
 
-  if (loading) return <CircularProgress />;
+    console.log("API RESPONSE:", res.data);
+    console.log("REPORT:", res.data.data);
+
+    setReport(res.data.data);
+  } catch (err) {
+    console.log("REPORT ERROR:", err);
+  } finally {
+    setLoading(false);
+  }
+};
+
+  if (loading || !report) {
+  return <CircularProgress />;
+}
 
   return (
-    <Box p={3}>
+   <Box sx={{ p: 3 }}>
       <Typography variant="h4" sx={{ mb: 3 }}>
         Reports
       </Typography>

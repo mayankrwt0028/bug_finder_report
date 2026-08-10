@@ -69,7 +69,7 @@ function BugList() {
           user.role === "QA") && (
           <Button
             variant="contained"
-            onClick={() => navigate("/qa/bugs/create")}
+            onClick={() => navigate(`/${user.role.toLowerCase()}/bugs/create`)}
           >
             Create Bug
           </Button>

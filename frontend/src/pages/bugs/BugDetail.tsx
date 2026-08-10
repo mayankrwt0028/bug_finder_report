@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import toast from "react-hot-toast";
 import { uploadAttachment } from "../../services/attachment.service";
-// import { getComment, createComment } from "../../services/comment.service";
+import {
+  getComments,
+  createComment,
+  updateComment,
+  deleteComment,
+} from "../../services/comment.service";
 
 import {
   Paper,
@@ -39,8 +44,11 @@ const BugDetails = () => {
 
   const [developerId, setDeveloperId] = useState("");
   const [file, setFile] = useState<File | null>(null);
-  // const [comments, setComments] = useState<any[]>([]);
-  // const [showcomment, setShowComment] = useState("");
+  const [comments, setComments] = useState<any[]>([]);
+  const [commentMessage, setCommentMessage] = useState("");
+  const [commentLoading, setCommentLoading] = useState(false);
+  const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
+  const [editingMessage, setEditingMessage] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -50,6 +58,8 @@ const BugDetails = () => {
         setBug(bugRes.data.bug);
 
         setStatus(bugRes.data.bug.status);
+        const commentRes = await getComments(id!);
+        setComments(commentRes.data.comment);
 
         if (user.role === "ADMIN" || user.role === "MANAGER") {
           const userRes = await getUsers();
@@ -64,6 +74,7 @@ const BugDetails = () => {
         if (bugRes.data.bug.assignedToId) {
           setDeveloperId(bugRes.data.bug.assignedToId);
         }
+        await fetchComments();
       } catch (err) {
         toast.error("Failed to load bug");
       } finally {
@@ -129,7 +140,65 @@ const BugDetails = () => {
       toast.error(err.response?.data?.message || "Upload failed");
     }
   };
+  const handleCreateComment = async () => {
+    if (!commentMessage.trim()) {
+      toast.error("Comment cannot be empty");
+      return;
+    }
 
+    try {
+      const res = await createComment(id!, commentMessage);
+
+      setComments((prev) => [res.data.comment, ...prev]);
+
+      setCommentMessage("");
+
+      toast.success("Comment added");
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to add comment");
+    }
+  };
+
+  const handleUpdateComment = async (commentId: string) => {
+    if (!editingMessage.trim()) {
+      toast.error("Comment cannot be empty");
+      return;
+    }
+
+    try {
+      const res = await updateComment(commentId, editingMessage);
+
+      setComments((prev) =>
+        prev.map((comment) =>
+          comment.id === commentId
+            ? {
+                ...comment,
+                message: res.data.comment.message,
+              }
+            : comment,
+        ),
+      );
+
+      setEditingCommentId(null);
+      setEditingMessage("");
+
+      toast.success("Comment updated");
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to update comment");
+    }
+  };
+
+  const handleDeleteComment = async (commentId: string) => {
+    try {
+      await deleteComment(commentId);
+
+      setComments((prev) => prev.filter((comment) => comment.id !== commentId));
+
+      toast.success("Comment deleted");
+    } catch (err: any) {
+      toast.error(err.response?.data?.message || "Failed to delete comment");
+    }
+  };
   if (loading || !bug) {
     return (
       <Box
@@ -143,7 +212,18 @@ const BugDetails = () => {
       </Box>
     );
   }
+  const fetchComments = async () => {
+    if (!id) return;
 
+    try {
+      const res = await getComments(id);
+
+      setComments(res.data.comment);
+    } catch (err: any) {
+      console.log("COMMENT ERROR:", err);
+      toast.error("Failed to load comments");
+    }
+  };
   return (
     <Paper sx={{ p: 4 }}>
       <Typography variant="h4">{bug.title}</Typography>
@@ -175,6 +255,109 @@ const BugDetails = () => {
       <Typography sx={{ mt: 2 }}>
         <b>Assigned To:</b> {bug.assignedTo?.name || "Not Assigned"}
       </Typography>
+      <Box sx={{ mt: 5 }}>
+        <Typography variant="h6" sx={{ mb: 2 }}>
+          Comments
+        </Typography>
+
+        {/* Add Comment */}
+        <TextField
+          fullWidth
+          multiline
+          rows={3}
+          label="Write a comment"
+          value={commentMessage}
+          onChange={(e) => setCommentMessage(e.target.value)}
+        />
+
+        <Button
+          variant="contained"
+          sx={{ mt: 2 }}
+          onClick={handleCreateComment}
+        >
+          Add Comment
+        </Button>
+
+
+        <Box sx={{ mt: 4 }}>
+          {comments.length === 0 ? (
+            <Typography color="text.secondary">No comments yet.</Typography>
+          ) : (
+            comments.map((comment) => (
+              <Paper key={comment.id} variant="outlined" sx={{ p: 2, mb: 2 }}>
+                {/* <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+                  {comment.user?.name || "Unknown User"}
+                </Typography> */}
+
+                <Typography
+                  variant="body2"
+                  color="text.secondary"
+                  sx={{ mb: 1 }}
+                >
+                  {comment.user?.email}
+                </Typography>
+
+                {editingCommentId === comment.id ? (
+                  <>
+                    <TextField
+                      fullWidth
+                      multiline
+                      value={editingMessage}
+                      onChange={(e) => setEditingMessage(e.target.value)}
+                    />
+
+                    <Button
+                      variant="contained"
+                      size="small"
+                      sx={{ mt: 1, mr: 1 }}
+                      onClick={() => handleUpdateComment(comment.id)}
+                    >
+                      Save
+                    </Button>
+
+                    <Button
+                      size="small"
+                      sx={{ mt: 1 }}
+                      onClick={() => {
+                        setEditingCommentId(null);
+                        setEditingMessage("");
+                      }}
+                    >
+                      Cancel
+                    </Button>
+                  </>
+                ) : (
+                  <>
+                    <Typography sx={{ mb: 2 }}>{comment.message}</Typography>
+
+                    {comment.userId === user.id && (
+                      <>
+                        <Button
+                          size="small"
+                          onClick={() => {
+                            setEditingCommentId(comment.id);
+                            setEditingMessage(comment.message);
+                          }}
+                        >
+                          Edit
+                        </Button>
+
+                        <Button
+                          size="small"
+                          color="error"
+                          onClick={() => handleDeleteComment(comment.id)}
+                        >
+                          Delete
+                        </Button>
+                      </>
+                    )}
+                  </>
+                )}
+              </Paper>
+            ))
+          )}
+        </Box>
+      </Box>
       <Box sx={{ mt: 4 }}>
         <Typography variant="h6" sx={{ mb: 2 }}>
           Bug Screenshot
@@ -254,7 +437,7 @@ const BugDetails = () => {
         )}
       </Box>
 
-      {/* Update Status */}
+
 
       <Box sx={{ mt: 4 }}>
         <Typography variant="h6">Update Status</Typography>
