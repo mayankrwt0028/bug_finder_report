@@ -46,7 +46,6 @@ const BugDetails = () => {
   const [file, setFile] = useState<File | null>(null);
   const [comments, setComments] = useState<any[]>([]);
   const [commentMessage, setCommentMessage] = useState("");
-  const [commentLoading, setCommentLoading] = useState(false);
   const [editingCommentId, setEditingCommentId] = useState<string | null>(null);
   const [editingMessage, setEditingMessage] = useState("");
 
